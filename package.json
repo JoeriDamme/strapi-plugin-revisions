@@ -1,5 +1,5 @@
 {
-  "name": "@joeridamme/strapi-plugin-revision",
+  "name": "@joeridamme/strapi-plugin-revisions",
   "version": "1.0.0-alpha.0",
   "description": "Add revision history of collection types to Strapi.",
   "strapi": {
