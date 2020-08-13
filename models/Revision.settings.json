@@ -1,0 +1,36 @@
+{
+  "collectionName": "plugin_revisions",
+  "info": {
+    "name": "revision",
+    "description": ""
+  },
+  "options": {
+    "timestamps": true
+  },
+  "attributes": {
+    "collection_id": {
+      "type": "integer",
+      "configurable": false,
+      "required": true
+    },
+    "collection_name": {
+      "type": "string",
+      "configurable": false,
+      "required": true
+    },
+    "action": {
+      "type": "enumeration",
+      "configurable": false,
+      "required": true,
+      "enum": [
+        "create",
+        "update",
+        "delete"
+      ]
+    },
+    "data": {
+      "type": "text",
+      "configurable": false
+    }
+  }
+}

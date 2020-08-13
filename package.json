@@ -1,0 +1,26 @@
+{
+  "name": "strapi-plugin-revision",
+  "version": "1.0.0-alpha.0",
+  "description": "Add revision history of collection types to Strapi.",
+  "strapi": {
+    "name": "revision",
+    "icon": "plug",
+    "description": "Add revision history of collection types to Strapi."
+  },
+  "dependencies": {},
+  "author": {
+    "name": "Joeri Damme",
+    "email": "joerid@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "Joeri Damme",
+      "email": "joerid@gmail.com"
+    }
+  ],
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "GNU General Public License v3.0"
+}

@@ -1,0 +1,12 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/config",
+      "handler": "revision.config",
+      "config": {
+        "policies": []
+      }
+    }
+  ]
+}
