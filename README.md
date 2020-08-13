@@ -13,7 +13,7 @@ This plugin is currently been developed for Strapi v3.1.3.
 
 # Configuration
 
-1. Define the Collection Types that needs revisions in the server configuration. Please use th singular noun:
+1. Define the Collection Types that needs revisions in the server configuration. Please use the singular noun:
 
 ```javascript
 module.exports = ({ env }) => ({
