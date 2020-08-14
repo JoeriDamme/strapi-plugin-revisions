@@ -2,6 +2,14 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/",
+      "handler": "revision.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/config",
       "handler": "revision.config",
       "config": {

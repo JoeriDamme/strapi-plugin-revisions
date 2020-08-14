@@ -40,7 +40,7 @@ function createModelLifeCycles(name) {
  * @param {object} strapiModel Model loaded in the strapi.models global object.
  */
 function createAfterUpdateLifecycle(strapiModel) {
-  const collectionName = strapiModel.collectionName;
+  const collectionName = strapiModel.info.name;
   const lifecycles = strapiModel.lifecycles;
   if (!lifecycles) {
     strapiModel.lifecycles = {
@@ -56,7 +56,7 @@ function createAfterUpdateLifecycle(strapiModel) {
  * @param {object} strapiModel Model loaded in the strapi.models global object.
  */
 function createAfterCreateLifecycle(strapiModel) {
-  const collectionName = strapiModel.collectionName;
+  const collectionName = strapiModel.info.name;
   const lifecycles = strapiModel.lifecycles;
   if (!lifecycles) {
     strapiModel.lifecycles = {
@@ -72,7 +72,7 @@ function createAfterCreateLifecycle(strapiModel) {
  * @param {object} strapiModel Model loaded in the strapi.models global object.
  */
 function createAfterDeleteLifecycle(strapiModel) {
-  const collectionName = strapiModel.collectionName;
+  const collectionName = strapiModel.info.name;
   const lifecycles = strapiModel.lifecycles;
   if (!lifecycles) {
     strapiModel.lifecycles = {

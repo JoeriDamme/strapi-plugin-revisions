@@ -5,58 +5,73 @@
  */
 
 import React, {memo, Component} from "react";
-// import PropTypes from 'prop-types';
-import pluginId from '../../pluginId';
-import MenuLeft from '../../components/MenuLeft';
-import {
-  HeaderNav,
-  LoadingIndicator,
-  PluginHeader,
-  request
-} from "strapi-helper-plugin";
+import { request } from "strapi-helper-plugin";
+import { Header } from '@buffetjs/custom';
+import SelectCollectionType from "../../components/SelectCollectionType";
 
 class HomePage extends Component {
   state = {
     loading: true,
-    importConfigs: []
+    collectionTypes: [],
+    revisions: [],
   };
 
   getConfigs = async () => {
     try {
-      console.log({
-        request,
-        window: window.location
-      });
-      const response = await request(`/revision/config`, { method: 'GET' });
-      return response;
+      return request('/revision/config', { method: 'GET' });
     } catch (e) {
       strapi.notification.error(`${e}`);
       return {};
     }
   };
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getConfigs().then(res => {
-      this.setState({ collectionTypes: res.collectionTypes, loading: false });
+      const collectionTypes = res.collectionTypes;
+      this.setState({ collectionTypes });
+
+      if (collectionTypes.length) {
+        this.getRevisions(collectionTypes[0]).then(res => {
+          this.setState({ revisions: res.data, loading: false });
+        })
+      }
     });
   };
 
+  getRevisions = async (collectionType) => {
+    try {
+      return request(`/revision/?collectionType=${collectionType}`, { method: 'GET' });
+    } catch (e) {
+      strapi.notification.error(`${e}`);
+      return;
+    }
+  }
+
+  handleCollectionTypeChange = (collectionType) => {
+    this.getRevisions(collectionType).then(res => {
+      this.setState({ revisions: res.data, loading: false });
+    })
+  }
+
   render() {
     return (
-      <div className={"container-fluid"}>
-        <PluginHeader
-          title={"Revision"}
-          description={"History of Collection Types"}
-        />
+      <div className="container-fluid">
         <div className="row">
-          <div className="col-3">
-            <MenuLeft></MenuLeft>
-          </div>
-          <div className="col-9">
-            col9
+          <div className="col">
+            <Header
+              title={{ label: 'Revisions' }}
+              content={"History of Collection Types"}
+              isLoading={this.state.loading}
+            />
           </div>
         </div>
-        
+        { !this.state.loading &&
+        <div className="row">
+          <div className="col-3">
+            <SelectCollectionType options={this.state.collectionTypes} onCollectionTypeSelection={this.handleCollectionTypeChange} />
+          </div>
+        </div>
+        }
       </div>
     );
   }

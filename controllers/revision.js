@@ -13,13 +13,34 @@ module.exports = {
    *
    * @return {Object}
    */
+  index: async (ctx, next) => {
+    const queryParameters = ctx.request.query;
 
-  index: async (ctx) => {
-    // Add your own logic here.
+    if (!queryParameters.hasOwnProperty('collectionType')) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 400,
+        message: 'query parameter "collectionType" is required',
+      }
+      return next();
+    }
 
-    // Send 200 `ok`
+    const selectedCollectionType = ctx.request.query.collectionType;
+    const availableCollectionTypes = strapi.config.get('server.revisions.collectionTypes', []);
+
+    if (!availableCollectionTypes.includes(selectedCollectionType)) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 400,
+        message: `given collectionType "${selectedCollectionType}" is not allowed. Available collection types: ${availableCollectionTypes.join(', ')}`,
+      }
+      return next();
+    }
+
+    const resources = await strapi.query('revision', 'revision').find({ collection_name: selectedCollectionType });
+
     ctx.send({
-      message: 'ok'
+      data: resources,
     });
   },
 
