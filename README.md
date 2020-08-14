@@ -9,7 +9,15 @@ The goal is to release the first stable version the end of September 2020.
 
 # Compatibility
 
-This plugin is currently been developed for Strapi v3.1.3. 
+This plugin is currently been developed for Strapi v3.1.3.
+
+# Development
+
+1. Clone the repo.
+2. Go to the folder of your Strapi installation.
+3. Create a name folder `revision`.
+4. Copy the content of the cloned repo to the `revision` folder.
+5. Start strapi with the following command: `yarn develop --watch-admin`.
 
 # Configuration
 
