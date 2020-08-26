@@ -10,6 +10,14 @@
     },
     {
       "method": "GET",
+      "path": "/collection-entries",
+      "handler": "revision.collectionEntries",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
       "path": "/config",
       "handler": "revision.config",
       "config": {

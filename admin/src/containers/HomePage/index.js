@@ -8,49 +8,69 @@ import React, {memo, Component} from "react";
 import { request } from "strapi-helper-plugin";
 import { Header } from '@buffetjs/custom';
 import SelectCollectionType from "../../components/SelectCollectionType";
+import { from } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
+import CollectionTable from "../../components/CollectionTable";
 
 class HomePage extends Component {
   state = {
     loading: true,
     collectionTypes: [],
-    revisions: [],
+    collectionEntries: [],
+    selectedValue: null,
+    attributes: null,
   };
 
-  getConfigs = async () => {
-    try {
-      return request('/revision/config', { method: 'GET' });
-    } catch (e) {
-      strapi.notification.error(`${e}`);
-      return {};
-    }
-  };
+  modelOptions = null;
 
   componentDidMount = () => {
-    this.getConfigs().then(res => {
-      const collectionTypes = res.collectionTypes;
-      this.setState({ collectionTypes });
+    this.getConfigs().pipe(
+      concatMap(response => {
+        this.modelOptions = response.modelOptions;
+        this.setState({
+          collectionTypes: response.collectionTypes,
+          selectedValue: response.collectionTypes[0],
+          modelOptions: this.modelOptions[response.collectionTypes[0]],
+        });
+        return this.getCollectionEntries(response.collectionTypes[0]);
+      }))
+      .subscribe(
+        response => {
+          this.setState({ collectionEntries: response.data, loading: false });
+        },
+        error => {
+          strapi.notification.error(error.message);
+        }
+    );
 
-      if (collectionTypes.length) {
-        this.getRevisions(collectionTypes[0]).then(res => {
-          this.setState({ revisions: res.data, loading: false });
-        })
-      }
-    });
+    this.getRevisions().subscribe();
   };
 
-  getRevisions = async (collectionType) => {
-    try {
-      return request(`/revision/?collectionType=${collectionType}`, { method: 'GET' });
-    } catch (e) {
-      strapi.notification.error(`${e}`);
-      return;
-    }
+  getConfigs = () => {
+    return from(request('/revision/config', { method: 'GET' }));
+  };
+
+  getRevisions = (collectionType) => {
+    return from(request(`/revision?collectionType=${collectionType}`, { method: 'GET' }));
+  };
+
+  getCollectionEntries = (collectionType) => {
+    return from(request(`/revision/collection-entries?collectionType=${collectionType}`, { method: 'GET' }));
   }
 
   handleCollectionTypeChange = (collectionType) => {
-    this.getRevisions(collectionType).then(res => {
-      this.setState({ revisions: res.data, loading: false });
-    })
+    this.setState({
+      loading: true,
+      selectedValue: collectionType,
+    });
+
+    this.getCollectionEntries(collectionType).subscribe(response => {
+      this.setState({
+        collectionEntries: response.data,
+        loading: false,
+        modelOptions: this.modelOptions[collectionType],
+      });
+    });
   }
 
   render() {
@@ -66,9 +86,20 @@ class HomePage extends Component {
           </div>
         </div>
         { !this.state.loading &&
-        <div className="row">
-          <div className="col-3">
-            <SelectCollectionType options={this.state.collectionTypes} onCollectionTypeSelection={this.handleCollectionTypeChange} />
+        <div className="content">
+          <div className="row">
+            <div className="col-3">
+              <SelectCollectionType
+                options={this.state.collectionTypes}
+                onCollectionTypeSelection={this.handleCollectionTypeChange}
+                selectedValue={this.state.selectedValue}
+              />
+            </div>
+          </div>
+          <div className="row mt-5">
+            <div className="col-12">
+              <CollectionTable collectionEntries={this.state.collectionEntries} modelOptions={this.state.modelOptions} />
+            </div>
           </div>
         </div>
         }

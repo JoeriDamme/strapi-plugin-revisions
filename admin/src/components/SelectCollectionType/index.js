@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Select } from '@buffetjs/core';
 
@@ -7,7 +7,7 @@ class SelectCollectionType extends Component {
     super(props);
 
     this.state = {
-      value: this.props.options[0],
+      value: this.props.selectedValue,
     }
   }
   
@@ -29,6 +29,7 @@ class SelectCollectionType extends Component {
 SelectCollectionType.propTypes = {
   options: PropTypes.arrayOf(PropTypes.string).isRequired,
   onCollectionTypeSelection: PropTypes.func.isRequired,
+  selectedValue: PropTypes.string.isRequired,
 };
 
 export default SelectCollectionType;
